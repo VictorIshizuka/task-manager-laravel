@@ -6,11 +6,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+
 use App\Models\Project;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+
 
 class ProjectController extends Controller
 {
@@ -82,13 +86,15 @@ class ProjectController extends Controller
     {
         try {
             $project->load([
-                'tasks',
-                'members',
-                'owner',
-                'files'
+                'tasks:id,project_id,title,status,due_date,priority',
+                'members:id,name,email',
+                'owner:id,name',
+                'files:id,project_id,path,original_name'
             ]);
 
-            return view('projects.show', compact('project'));
+            $users = \App\Models\User::select('id', 'name')->get();
+
+            return view('projects.show', compact('project', 'users'));
         } catch (\Throwable $e) {
             Log::error('Erro ao exibir projeto: ' . $e->getMessage());
 
@@ -163,5 +169,35 @@ class ProjectController extends Controller
                 'original_name' => $request->file('file')->getClientOriginalName()
             ]);
         }
+    }
+
+    public function  addMember(Request $request, Project $project)
+    {
+        $this->authorize('update', $project);
+
+        $request->validate([
+            'user_id' => [
+                'required',
+                'exists:users,id',
+
+                Rule::unique('project_user', 'user_id')
+                    ->where(fn($query) => $query->where('project_id', $project->id))
+            ],
+        ], [
+            'user_id.unique' => 'Este usuário já é membro do projeto.',
+            'user_id.required' => 'Selecione um usuário.',
+        ]);
+        $project->members()->syncWithoutDetaching([$request->user_id]);
+
+        return back()->with('success', 'Usuário adicionado com sucesso.');
+    }
+
+    public function removeMember(Project $project, $userId)
+    {
+        $this->authorize('update', $project);
+
+        $project->members()->detach($userId);
+
+        return back()->with('success', 'Usuário removido com sucesso.');
     }
 }

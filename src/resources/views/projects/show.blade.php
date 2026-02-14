@@ -7,7 +7,8 @@
 
             <div class="flex gap-2">
                 <a href="{{ route('projects.index') }}"
-                    class="inline-flex items-center px-3 py-2 bg-gray-600 dark:bg-gray-700 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-gray-600 transition">
+                    class="inline-flex items-center px-3 py-2 bg-gray-600 dark:bg-gray-700 border border-transparent
+                    rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-gray-600 transition duration-200">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -17,13 +18,14 @@
 
                 @can('update', $project)
                     <a href="{{ route('projects.edit', $project) }}"
-                        class="inline-flex items-center px-3 py-2 bg-yellow-600 dark:bg-yellow-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-700 dark:hover:bg-yellow-600 transition">
+                        class="inline-flex items-center px-3 py-2 bg-yellow-600 dark:bg-yellow-500 border border-transparent
+                        rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-700 dark:hover:bg-yellow-600 transition duration-200">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
                             </path>
                         </svg>
-                        Editar
+                        Editar Projeto
                     </a>
                 @endcan
 
@@ -33,13 +35,14 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit"
-                            class="inline-flex items-center px-3 py-2 bg-red-600 dark:bg-red-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 dark:hover:bg-red-600 transition">
+                            class="inline-flex items-center px-3 py-2 bg-red-600 dark:bg-red-500 border border-transparent
+                            rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 dark:hover:bg-red-600 transition duration-200">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                 </path>
                             </svg>
-                            Excluir
+                            Excluir Projeto
                         </button>
                     </form>
                 @endcan
@@ -140,7 +143,7 @@
 
                     <!-- Arquivos do Projeto -->
                     <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg mt-6">
-                        <div class="p-6">
+                        <div class="">
                             <div class="flex justify-between items-center mb-4">
                                 <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
                                     Arquivos ({{ $project->files->count() }})
@@ -153,7 +156,12 @@
                                         <input type="file" name="file" class="text-sm border-gray-300 rounded-md">
 
                                         <button
-                                            class="inline-flex items-center px-3 py-1 bg-indigo-600 text-white text-xs rounded-md ">
+                                            class="shrink-0 inline-flex items-center px-2 py-2
+                                            bg-indigo-600 dark:bg-indigo-500
+                                            border border-transparent rounded-md
+                                            font-semibold text-xs text-white uppercase tracking-widest
+                                            hover:bg-indigo-700 dark:hover:bg-indigo-600
+                                            transition duration-200">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -189,7 +197,8 @@
                                     @endcan
                                 </div>
                             @empty
-                                <p class="text-gray-500 text-sm">Nenhum arquivo anexado.</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-center py-4">Nenhum arquivo anexado.
+                                </p>
                             @endforelse
                         </div>
                     </div>
@@ -229,32 +238,56 @@
             </div>
 
             @if (auth()->id() === $project->owner_id)
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                <div class="text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
                     <h3 class="text-lg font-semibold mb-4">Compartilhar Projeto</h3>
 
                     <form method="POST" action="{{ route('projects.members.add', $project) }}">
                         @csrf
 
-                        <div class="flex items-end gap-3">
+                        <div class="flex gap-3">
 
                             <div class="flex-1">
-                                <input type="email" name="email" placeholder="Email do usuário"
-                                    class="w-full border-gray-300 dark:border-gray-700
+                                <label class="block text-sm mb-1 text-gray-600 dark:text-gray-400">
+                                    Selecionar usuário
+                                </label>
+
+                                <select name="user_id"
+                                    class="w-full h-10 border-gray-300 dark:border-gray-700
                                         dark:bg-gray-900 dark:text-gray-300
                                         rounded-md shadow-sm
-                                        focus:border-indigo-500 dark:focus:border-indigo-600
-                                        focus:ring-indigo-500 dark:focus:ring-indigo-600">
+                                        focus:border-indigo-500 focus:ring-indigo-500">
+
+                                    <option value="">Selecione um usuário</option>
+
+                                    @foreach ($users as $user)
+                                        @if ($user->id !== $project->owner_id)
+                                            <option value="{{ $user->id }}"
+                                                {{ $project->members->contains($user->id) ? 'disabled' : '' }}>
+                                                {{ $user->name }}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </select>
+
+                                @error('user_id')
+                                    <p class="text-red-500 text-xs mt-1">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
                             </div>
 
-                            <button type="submit"
-                                class="shrink-0 inline-flex items-center px-4 py-2
-                                    bg-indigo-600 dark:bg-indigo-500
-                                    border border-transparent rounded-md
-                                    font-semibold text-xs text-white uppercase tracking-widest
-                                    hover:bg-indigo-700 dark:hover:bg-indigo-600
-                                    transition">
-                                + Adicionar
-                            </button>
+                            <div class="flex items-end">
+                                <button type="submit"
+                                    class="h-10 px-4 mt-6
+                                        inline-flex items-center justify-center
+                                        bg-indigo-600 dark:bg-indigo-500
+                                        border border-transparent rounded-md
+                                        text-sm font-medium text-white
+                                        hover:bg-indigo-700 dark:hover:bg-indigo-600
+                                        transition">
+                                    Adicionar
+                                </button>
+                            </div>
 
                         </div>
                     </form>
@@ -262,32 +295,58 @@
                     <div class="mt-4">
                         <h4 class="font-semibold">Membros:</h4>
 
-                        @foreach ($project->members as $member)
-                            <div class="flex justify-between mt-2 text-xs text-gray-500 dark:text-gray-400">
-                                <span>{{ $member->name }}</span>
-                                @if ($member->id === $project->owner_id)
-                                    <span class="text-green-500">(Proprietário)</span>
-                                @endif
-                                @if ($member->id === auth()->id())
-                                    <span class="text-blue-500">(Você)</span>
-                                @endif
-                                @if ($member->id !== $project->owner_id && $member->id !== auth()->id())
-                                    <span class="text-gray-400">(Membro)</span>
-                                @endif
+                        @forelse($project->members as $member)
+                            <div
+                                class="flex items-center justify-between mt-2 text-md text-gray-500 dark:text-gray-400">
 
+                                <!-- Lado esquerdo -->
+                                <div class="flex items-center gap-3">
+
+                                    <span class="font-medium text-gray-800 dark:text-gray-200">
+                                        {{ $member->name }}
+                                    </span>
+
+                                    {{-- Badge de status --}}
+                                    @if ($member->id === $project->owner_id)
+                                        <span class="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-600">
+                                            Proprietário
+                                        </span>
+                                    @elseif ($member->id === auth()->id())
+                                        <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-600">
+                                            Você
+                                        </span>
+                                    @else
+                                        <span class="px-2 py-0.5 text-xs rounded-full bg-gray-200 text-gray-600">
+                                            Membro
+                                        </span>
+                                    @endif
+
+                                </div>
+
+                                <!-- Lado direito -->
                                 @if ($member->id !== $project->owner_id)
-                                    {{-- Não permitir remover o proprietário --}}
                                     <form method="POST"
                                         action="{{ route('projects.members.remove', [$project, $member]) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="text-red-500 text-sm">
-                                            Remover
+
+                                        <button class="text-red-500 hover:text-red-700 transition">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                </path>
+                                            </svg>
                                         </button>
                                     </form>
                                 @endif
+
                             </div>
-                        @endforeach
+                        @empty
+                            <p class="text-gray-500 dark:text-gray-400 text-center py-4">
+                                Nenhum membro neste projeto ainda.
+                            </p>
+                        @endforelse
                     </div>
                 </div>
             @endif
@@ -302,7 +361,8 @@
 
                         @can('create', [App\Models\Task::class, $project])
                             <a href="{{ route('tasks.create', ['project_id' => $project->id]) }}"
-                                class="inline-flex items-center px-3 py-2 bg-indigo-600 dark:bg-indigo-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 dark:hover:bg-indigo-600 transition">
+                                class="inline-flex items-center px-3 py-2 bg-indigo-600 dark:bg-indigo-500 border border-transparent
+                                rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 dark:hover:bg-indigo-600 transition duration-200">
                                 + Nova Tarefa
                             </a>
                         @endcan
@@ -345,7 +405,7 @@
                             </div>
                         </div>
                     @empty
-                        <p class="text-gray-500 dark:text-gray-400 text-center py-8">
+                        <p class="text-gray-500 dark:text-gray-400 text-center py-4">
                             Nenhuma tarefa neste projeto ainda.
                         </p>
                     @endforelse

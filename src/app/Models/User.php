@@ -46,19 +46,31 @@ class User extends Authenticatable
         ];
     }
 
+    // Os projetos que o usuário é dono
     public function ownedProjects()
     {
         return $this->hasMany(Project::class, 'owner_id');
     }
 
+    //Os projetos que o usuário é membro, mas não necessariamente dono
     public function projects()
     {
         return $this->belongsToMany(Project::class)
             ->withTimestamps();
     }
 
+    //As tarefas que o usuário é responsável
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+    //Todos os projetos relacionados ao usuário, seja como dono ou membro
+    public function allProjects()
+    {
+        return Project::where('owner_id', $this->id)
+            ->orWhereHas('members', function ($query) {
+                $query->where('users.id', $this->id);
+            });
     }
 }

@@ -22,8 +22,10 @@ class TaskPolicy
      */
     public function view(User $user, Task $task): bool
     {
-        return $task->project->members()->where('user_id', $user->id)->exists()
-            || $task->project->owner_id === $user->id;
+        return $task->project->owner_id === $user->id
+            || $task->project->members()
+            ->where('user_id', $user->id)
+            ->exists();
     }
 
     /**
@@ -31,8 +33,10 @@ class TaskPolicy
      */
     public function create(User $user,  Project $project): bool
     {
-        return $project->members()->where('user_id', $user->id)->exists()
-            || $project->owner_id === $user->id;
+        return $project->owner_id === $user->id
+            || $project->members()
+            ->where('user_id', $user->id)
+            ->exists();
     }
 
     /**
@@ -40,8 +44,10 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $task->user_id === $user->id
-            || $task->project->owner_id === $user->id;
+        return $task->project->owner_id === $user->id
+            || $task->project->members()
+            ->where('user_id', $user->id)
+            ->exists();
     }
 
     /**

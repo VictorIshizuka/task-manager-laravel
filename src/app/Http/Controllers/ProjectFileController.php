@@ -14,7 +14,7 @@ class ProjectFileController extends Controller
         $this->authorize('update', $project);
 
         $request->validate([
-            'file' => 'required|file|max:2048|mimes:pdf,jpg,jpeg,png'
+            'file' => 'required|file|max:2048|mimes:pdf,jpg,jpeg,png|mimetypes:application/pdf,image/jpeg,image/png'
         ]);
 
         $path = $request->file('file')->store('projects', 'public');

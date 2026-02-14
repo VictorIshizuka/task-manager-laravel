@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Project extends Model
 {
@@ -28,6 +29,11 @@ class Project extends Model
         static::deleting(function ($project) {
             if (! $project->isForceDeleting()) {
                 $project->tasks()->delete();
+            }
+
+            foreach ($project->files as $file) {
+                Storage::disk('public')->delete($file->path);
+                $file->delete();
             }
         });
 

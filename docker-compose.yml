@@ -6,10 +6,13 @@ services:
       context: .
       dockerfile: docker/php/Dockerfile
     container_name: task-manager-app
+    command: bash -c "chmod -R 777 storage bootstrap/cache && php-fpm"
     restart: unless-stopped
     working_dir: /var/www
     volumes:
       - ./src:/var/www
+    ports:
+      - "5173:5173"
     depends_on:
       - mysql
     networks:

@@ -9,20 +9,20 @@ use Illuminate\Auth\Access\Response;
 class ProjectPolicy
 {
     /**
-     * Determine whether the user can view any models.
+     * Pode ver a lista de projetos, desde que seja membro ou dono de algum projeto
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
-     * Determine whether the user can view the model.
+     *  Pode ver o projeto se for dono ou membro
      */
     public function view(User $user, Project $project): bool
     {
         return $project->owner_id === $user->id
-            || $project->members()->where('user_id', $user->id)->exists();
+            || $project->members()->where('users.id', $user->id)->exists();
     }
 
     /**
@@ -30,11 +30,11 @@ class ProjectPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Apenas o dono do projeto pode editar
      */
     public function update(User $user, Project $project): bool
     {
@@ -42,7 +42,7 @@ class ProjectPolicy
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Apenas o dono do projeto pode deletar
      */
     public function delete(User $user, Project $project): bool
     {
@@ -52,21 +52,30 @@ class ProjectPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Project $project): bool
-    {
-        return false;
-    }
+    // public function restore(User $user, Project $project): bool
+    // {
+    //     return false;
+    // }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Project $project): bool
-    {
-        return false;
-    }
+    // public function forceDelete(User $user, Project $project): bool
+    // {
+    //     return false;
+    // }
 
+    // Apenas o dono do projeto pode adicionar membros
     public function addMember(User $user, Project $project): bool
     {
         return $project->owner_id === $user->id;
     }
+
+    // Apenas o dono do projeto pode remover membros
+    public function removeMember(User $user, Project $project): bool
+    {
+        return $project->owner_id === $user->id;
+    }
+
+    //
 }

@@ -18,9 +18,9 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         return [
-            'owner_id' => User::factory(),
-            'title' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph(),
+            'owner_id' => 1,
+            'title' => 'Sistema Interno',
+            'description' => 'Projeto para desenvolvimento do sistema interno da empresa.',
             'start_date' => now(),
             'due_date' => now()->addDays(30),
         ];

@@ -20,21 +20,46 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        $user = User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' =>  Hash::make('password'),
+        $owner = User::create([
+            'name' => 'João Silva',
+            'email' => 'joao@example.com',
+            'password' => bcrypt('password'),
         ]);
 
-        $project = Project::factory()->create([
-            'owner_id' => $user->id
+        $member = User::create([
+            'name' => 'Maria Souza',
+            'email' => 'maria@example.com',
+            'password' => bcrypt('password'),
         ]);
 
-        $project->members()->attach($user->id);
+        $project = Project::create([
+            'owner_id' => $owner->id,
+            'title' => 'Sistema de Gestão de Tarefas',
+            'description' => 'Projeto para controle interno de tarefas da equipe.',
+            'start_date' => now(),
+            'due_date' => now()->addDays(45),
+        ]);
 
-        Task::factory()->count(5)->create([
+        $project->members()->attach([$owner->id, $member->id]);
+
+        Task::create([
             'project_id' => $project->id,
-            'user_id' => $user->id
+            'user_id' => $owner->id,
+            'title' => 'Definir arquitetura',
+            'description' => 'Definir estrutura MVC e modelagem do banco.',
+            'due_date' => now()->addDays(7),
+            'priority' => 'high',
+            'status' => 'in_progress',
+        ]);
+
+        Task::create([
+            'project_id' => $project->id,
+            'user_id' => $member->id,
+            'title' => 'Criar migrations',
+            'description' => 'Criar migrations iniciais do projeto.',
+            'due_date' => now()->addDays(10),
+            'priority' => 'medium',
+            'status' => 'pending',
         ]);
     }
 }

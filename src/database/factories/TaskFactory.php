@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\{Project, User};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,13 +17,13 @@ class TaskFactory extends Factory
     public function definition(): array
     {
         return [
-            'project_id' => Project::factory(),
-            'user_id' => User::factory(),
-            'title' => $this->faker->sentence(4),
-            'description' => $this->faker->paragraph(),
-            'due_date' => now()->addDays(rand(1, 20)),
-            'priority' => $this->faker->randomElement(['low', 'medium', 'high']),
-            'status' => $this->faker->randomElement(['pending', 'in_progress', 'done']),
+            'project_id' => 1,
+            'user_id' => 1,
+            'title' => 'Configurar ambiente',
+            'description' => 'Configurar ambiente local com Docker.',
+            'due_date' => now()->addDays(5),
+            'priority' => 'high',
+            'status' => 'pending',
         ];
     }
 }

@@ -4,6 +4,12 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">
                 Detalhes do Projeto
             </h2>
+            @if (session('error'))
+                <div
+                    style="background-color: #fee2e2; color: #b91c1c; padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem;">
+                    {{ session('error') }}
+                </div>
+            @endif
 
             <div class="flex gap-2">
                 <a href="{{ route('projects.index') }}"
@@ -237,10 +243,11 @@
                 </div>
             </div>
 
-            @if (auth()->id() === $project->owner_id)
-                <div class="text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                    <h3 class="text-lg font-semibold mb-4">Compartilhar Projeto</h3>
+            {{-- @if (auth()->id() === $project->owner_id) --}}
+            <div class="text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Compartilhar Projeto</h3>
 
+                @if (auth()->id() === $project->owner_id)
                     <form method="POST" action="{{ route('projects.members.add', $project) }}">
                         @csrf
 
@@ -260,12 +267,12 @@
                                     <option value="">Selecione um usuário</option>
 
                                     @foreach ($users as $user)
-                                        @if ($user->id !== $project->owner_id)
-                                            <option value="{{ $user->id }}"
-                                                {{ $project->members->contains($user->id) ? 'disabled' : '' }}>
-                                                {{ $user->name }}
-                                            </option>
-                                        @endif
+                                        {{-- @if ($user->id !== $project->owner_id) --}}
+                                        <option value="{{ $user->id }}"
+                                            {{ $project->members->contains($user->id) ? 'disabled' : '' }}>
+                                            {{ $user->name }}
+                                        </option>
+                                        {{-- @endif --}}
                                     @endforeach
                                 </select>
 
@@ -282,7 +289,7 @@
                                         inline-flex items-center justify-center
                                         bg-indigo-600 dark:bg-indigo-500
                                         border border-transparent rounded-md
-                                        text-sm font-medium text-white
+                                        text-sm font-medium text-white uppercase
                                         hover:bg-indigo-700 dark:hover:bg-indigo-600
                                         transition">
                                     Adicionar
@@ -291,65 +298,65 @@
 
                         </div>
                     </form>
+                @endif
 
-                    <div class="mt-4">
-                        <h4 class="font-semibold">Membros:</h4>
+                <div class="mt-4">
+                    <h4 class="font-semibold">Membros:</h4>
 
-                        @forelse($project->members as $member)
-                            <div
-                                class="flex items-center justify-between mt-2 text-md text-gray-500 dark:text-gray-400">
+                    @forelse($project->members as $member)
+                        <div class="flex items-center justify-between mt-2 text-md text-gray-500 dark:text-gray-400">
 
-                                <!-- Lado esquerdo -->
-                                <div class="flex items-center gap-3">
+                            <!-- Lado esquerdo -->
+                            <div class="flex items-center gap-3">
 
-                                    <span class="font-medium text-gray-800 dark:text-gray-200">
-                                        {{ $member->name }}
+                                <span class="font-medium text-gray-800 dark:text-gray-200">
+                                    {{ $member->name }}
+                                </span>
+
+                                {{-- Badge de status --}}
+                                @if ($member->id === $project->owner_id)
+                                    <span class="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-600">
+                                        Proprietário
                                     </span>
-
-                                    {{-- Badge de status --}}
-                                    @if ($member->id === $project->owner_id)
-                                        <span class="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-600">
-                                            Proprietário
-                                        </span>
-                                    @elseif ($member->id === auth()->id())
-                                        <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-600">
-                                            Você
-                                        </span>
-                                    @else
-                                        <span class="px-2 py-0.5 text-xs rounded-full bg-gray-200 text-gray-600">
-                                            Membro
-                                        </span>
-                                    @endif
-
-                                </div>
-
-                                <!-- Lado direito -->
-                                @if ($member->id !== $project->owner_id)
-                                    <form method="POST"
-                                        action="{{ route('projects.members.remove', [$project, $member]) }}">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button class="text-red-500 hover:text-red-700 transition">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                    </form>
+                                @elseif ($member->id === auth()->id())
+                                    <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-600">
+                                        Você
+                                    </span>
+                                @else
+                                    <span class="px-2 py-0.5 text-xs rounded-full bg-gray-200 text-gray-600">
+                                        Membro
+                                    </span>
                                 @endif
 
                             </div>
-                        @empty
-                            <p class="text-gray-500 dark:text-gray-400 text-center py-4">
-                                Nenhum membro neste projeto ainda.
-                            </p>
-                        @endforelse
-                    </div>
+
+                            <!-- Lado direito -->
+                            @if (auth()->id() === $project->owner_id || auth()->id() === $member->id)
+                                <form method="POST"
+                                    action="{{ route('projects.members.remove', [$project, $member]) }}">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button class="text-red-500 hover:text-red-700 transition">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </form>
+                            @endif
+
+                        </div>
+                    @empty
+                        <p class="text-gray-500 dark:text-gray-400 text-center py-4">
+                            Nenhum membro neste projeto ainda.
+                        </p>
+                    @endforelse
                 </div>
-            @endif
+            </div>
+            {{-- @endif --}}
 
             <!-- Tarefas do Projeto -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-6">
@@ -368,40 +375,144 @@
                         @endcan
                     </div>
 
+                    <!-- Filtros -->
+                    <form method="GET" class="flex items-end gap-3 mb-4">
+
+                        <div>
+                            <select name="status"
+                                class="h-10 border-gray-300 dark:border-gray-700
+                                dark:bg-gray-900 dark:text-gray-300
+                                rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <option value="">Status</option>
+                                <option value="pending" @selected(request('status') == 'pending')>Pendente</option>
+                                <option value="in_progress" @selected(request('status') == 'in_progress')>Em andamento</option>
+                                <option value="done" @selected(request('status') == 'done')>Concluída</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <select name="priority"
+                                class="h-10 border-gray-300 dark:border-gray-700
+                                dark:bg-gray-900 dark:text-gray-300
+                                rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <option value="">Prioridade</option>
+                                <option value="low" @selected(request('priority') == 'low')>Baixa</option>
+                                <option value="medium" @selected(request('priority') == 'medium')>Média</option>
+                                <option value="high" @selected(request('priority') == 'high')>Alta</option>
+                            </select>
+                        </div>
+
+                        <button
+                            class="h-10 px-4 bg-indigo-600 dark:bg-indigo-500
+                            text-white rounded-md text-sm font-medium
+                            hover:bg-indigo-700 dark:hover:bg-indigo-600 transition">
+                            Filtrar
+                        </button>
+
+                    </form>
+
                     @forelse($project->tasks as $task)
                         <div class="border-b border-gray-200 dark:border-gray-700 py-4 last:border-b-0">
                             <div class="flex items-start justify-between">
 
                                 <div class="flex items-start">
-                                    <input type="checkbox" {{ $task->status === 'done' ? 'checked' : '' }} disabled
-                                        class="mt-1 rounded border-gray-300 dark:border-gray-700 text-indigo-600">
+
+                                    {{-- Concluir --}}
+                                    @can('update', $task)
+                                        <form method="POST" action="{{ route('tasks.toggle', $task) }}">
+                                            @csrf
+                                            @method('PATCH')
+
+                                            <button type="submit"
+                                                class="relative flex items-center justify-center w-5 h-5
+                                                    border rounded-md transition
+                                                    {{ $task->status === 'done'
+                                                        ? 'bg-indigo-600 border-indigo-600'
+                                                        : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600' }}">
+
+                                                @if ($task->status === 'done')
+                                                    <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="3" d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                @endif
+
+                                            </button>
+                                        </form>
+                                    @endcan
 
                                     <div class="ml-3">
                                         <p
                                             class="text-sm font-medium
-                                {{ $task->status === 'done' ? 'line-through text-gray-400' : 'text-gray-900 dark:text-gray-100' }}">
+                                            {{ $task->status === 'done' ? 'line-through text-gray-400' : 'text-gray-900 dark:text-gray-100' }}">
                                             {{ $task->title }}
                                         </p>
 
-                                        <div class="flex gap-3 mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                        <div class="flex gap-4 mt-1 text-xs text-gray-500 dark:text-gray-400">
+
                                             @if ($task->due_date)
                                                 <span>
-                                                    Vencimento:
-                                                    {{ \Carbon\Carbon::parse($task->due_date)->format('d/m/Y') }}
+                                                    📅 {{ $task->due_date->format('d/m/Y') }}
                                                 </span>
                                             @endif
 
                                             <span>
-                                                Prioridade: {{ ucfirst($task->priority) }}
+                                                🔥 {{ ucfirst($task->priority) }}
                                             </span>
+
+                                            <span>
+                                                Status: {{ str_replace('_', ' ', ucfirst($task->status)) }}
+                                            </span>
+
                                         </div>
                                     </div>
                                 </div>
 
-                                <a href="{{ route('tasks.show', $task) }}"
-                                    class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 text-sm">
-                                    Ver →
-                                </a>
+                                {{-- Ações --}}
+                                <div class="flex items-center gap-3 text-sm">
+                                    <a href="{{ route('tasks.show', $task) }}"
+                                        class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                            </path>
+                                        </svg>
+                                    </a>
+
+                                    @can('update', $task)
+                                        <a href="{{ route('tasks.edit', ['project_id' => $project->id, 'task' => $task->id]) }}"
+                                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
+                                            </svg>
+                                        </a>
+                                    @endcan
+
+                                    @can('delete', $task)
+                                        <form method="POST" action="{{ route('tasks.destroy', $task) }}">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button class="text-red-500 hover:text-red-700 transition pt-1">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endcan
+
+                                </div>
+
                             </div>
                         </div>
                     @empty

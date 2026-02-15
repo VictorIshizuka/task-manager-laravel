@@ -1,6 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Criar Novo Projeto</h2>
+        @if (session('error'))
+            <div
+                style="background-color: #fee2e2; color: #b91c1c; padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem;">
+                {{ session('error') }}
+            </div>
+        @endif
     </x-slot>
 
     <div class="py-12">

@@ -5,58 +5,49 @@ namespace App\Policies;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class TaskPolicy
 {
     /**
-     * Determine whether the user can view any models.
+     * Apenas membros de algum projeto podem ver a lista de tarefas
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Pode ver a tarefa se for membro do projeto ou dono da tarefa
      */
     public function view(User $user, Task $task): bool
     {
-        return $task->project->owner_id === $user->id
-            || $task->project->members()
-            ->where('user_id', $user->id)
-            ->exists();
+        return $task->user_id === $user->id || ($task->project->owner_id === $user->id
+            || $task->project->members->contains($user->id));
     }
 
     /**
-     * Determine whether the user can create models.
+     * Pode criar tarefa se for membro do projeto ou dono do projeto
      */
     public function create(User $user,  Project $project): bool
     {
         return $project->owner_id === $user->id
-            || $project->members()
-            ->where('user_id', $user->id)
-            ->exists();
+            || $project->members->contains($user->id);
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Pode atualizar a tarefa se for membro do projeto ou dono da tarefa
      */
     public function update(User $user, Task $task): bool
     {
-        return $task->project->owner_id === $user->id
-            || $task->project->members()
-            ->where('user_id', $user->id)
-            ->exists();
+        return $task->project->members->contains($user->id);
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Pode deletar a tarefa se for dono da tarefa
      */
     public function delete(User $user, Task $task): bool
     {
-        return $task->user_id === $user->id
-            || $task->project->owner_id === $user->id;
+        return $task->user_id === $user->id;
     }
 
     /**

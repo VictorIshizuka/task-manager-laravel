@@ -11,14 +11,18 @@ class Task extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'project_id',
-        'user_id',
+        // 'project_id',
+        // 'user_id',
         'title',
         'description',
         'due_date',
         'priority',
         'status',
         'due_date',
+    ];
+
+    protected $casts = [
+        'due_date' => 'date',
     ];
 
     public function project()

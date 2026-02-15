@@ -39,7 +39,8 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $task->project->members->contains($user->id);
+        return $task->project->members->contains($user->id)
+            || $task->project->owner_id === $user->id;
     }
 
     /**

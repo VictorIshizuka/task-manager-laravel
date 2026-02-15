@@ -31,19 +31,21 @@ Route::middleware('auth')->group(function () {
     Route::delete('projects/{project}/members/{user}', [ProjectController::class, 'removeMember'])->name('projects.members.remove');
 
     // Project files routes
-    Route::get('/projects/{project}/files/{file}/download', [ProjectFileController::class, 'download'])->name('projects.files.download');
-    Route::post('/projects/{project}/files', [ProjectFileController::class, 'store'])->name('projects.files.store');
-    Route::delete('/projects/{project}/files/{file}', [ProjectFileController::class, 'destroy'])->name('projects.files.destroy');
+    Route::get('projects/{project}/files/{file}/download', [ProjectFileController::class, 'download'])->name('projects.files.download');
+    Route::post('projects/{project}/files', [ProjectFileController::class, 'store'])->name('projects.files.store');
+    Route::delete('projects/{project}/files/{file}', [ProjectFileController::class, 'destroy'])->name('projects.files.destroy');
 
 
     // Task routes
-    Route::resource('tasks', TaskController::class);
-    Route::patch('tasks/{task}/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
+    Route::resource('projects.tasks', TaskController::class);
+
+    //  Task toggle status route
+    Route::patch('projects/{project}/tasks/{task}/toggle', [TaskController::class, 'toggle'])->name('projects.tasks.toggle');
 
     // Task files routes
-    Route::get('/tasks/{task}/files/{file}/download', [TaskFileController::class, 'download'])->name('tasks.files.download');
-    Route::post('/tasks/{task}/files', [TaskFileController::class, 'store'])->name('tasks.files.store');
-    Route::delete('/tasks/{task}/files/{file}', [TaskFileController::class, 'destroy'])->name('tasks.files.destroy');
+    Route::get('projects/{project}/tasks/{task}/files/{file}/download', [TaskFileController::class, 'download'])->name('projects.tasks.files.download');
+    Route::post('projects/{project}/tasks/{task}/files', [TaskFileController::class, 'store'])->name('projects.tasks.files.store');
+    Route::delete('projects/{project}/tasks/{task}/files/{file}', [TaskFileController::class, 'destroy'])->name('projects.tasks.files.destroy');
 });
 
 require __DIR__ . '/auth.php';

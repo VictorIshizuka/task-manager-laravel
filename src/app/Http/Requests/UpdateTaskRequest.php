@@ -28,14 +28,13 @@ class UpdateTaskRequest extends FormRequest
             'due_date' => 'nullable|date',
             'priority' => 'required|in:low,medium,high',
             'status' => 'nullable|in:pending,in_progress,done',
-            'file' => 'nullable|mimes:pdf|max:2048',
+            'file' => 'nullable|mimes:pdf|max:2048', // 2MB
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'project_id' => 'projeto',
             'title' => 'título',
             'description' => 'descrição',
             'due_date' => 'data de vencimento',

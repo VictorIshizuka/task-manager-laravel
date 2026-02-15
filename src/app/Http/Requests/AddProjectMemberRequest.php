@@ -32,10 +32,32 @@ class AddProjectMemberRequest extends FormRequest
                 Rule::unique('project_user', 'user_id')
                     ->where(fn($q) => $q->where('project_id', $project->id))
             ],
-            [
-                'user_id.unique' => 'Este usuário já é membro do projeto.',
-                'user_id.required' => 'Selecione um usuário.',
-            ]
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'user_id' => 'usuário',
+        ];
+    }
+
+    /**
+     * Get custom error messages for validation failures.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'user_id.required' => 'O campo usuário é obrigatório.',
+            'user_id.exists' => 'O usuário selecionado não existe.',
+            'user_id.unique' => 'Este usuário já é membro do projeto.',
         ];
     }
 }

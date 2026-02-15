@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
+
+
+use Illuminate\Database\Eloquent\{Factories\HasFactory, Model, SoftDeletes};
+use Illuminate\Support\Facades\{Log, Storage};
 
 class Project extends Model
 {
@@ -13,10 +13,12 @@ class Project extends Model
 
     protected $fillable = [
         'owner_id',
+        'project_id',
         'title',
         'description',
         'start_date',
         'due_date'
+
     ];
 
     protected $casts = [
@@ -26,21 +28,85 @@ class Project extends Model
 
     protected static function booted()
     {
+        /**
+         * SOFT DELETE (padrão)
+         * Quando deletar com soft delete, também soft deleta as tasks
+         */
         static::deleting(function ($project) {
-            if (! $project->isForceDeleting()) {
+            if (!$project->isForceDeleting()) {
+                // Soft delete nas tasks
                 $project->tasks()->delete();
-            }
 
-            foreach ($project->files as $file) {
-                Storage::disk('public')->delete($file->path);
-                $file->delete();
+                Log::info("Project {$project->id} soft deleted com suas tasks");
+            } else {
+                // FORCE DELETE - Deletar tudo permanente
+                static::forceDeleteProject($project);
             }
         });
 
-        static::restoring(function ($project) { // Restaura as tarefas associadas quando o projeto é restaurado (analisar etapa futura)
-            $project->tasks()->withTrashed()->restore(); // atualmente nao permite restaurar tarefas, mas posso verificar a condição futura
+        /**
+         * RESTAURAÇÃO
+         * Quando restaurar projeto, também restaura as tasks
+         */
+        static::restoring(function ($project) {
+            $project->tasks()->withTrashed()->restore();
+
+            Log::info("Project {$project->id} restaurado com suas tasks");
         });
     }
+    /**
+     * Deleta permanentemente o projeto e todos os seus recursos
+     */
+    protected static function forceDeleteProject($project)
+    {
+        try {
+            // 1. Deletar arquivos físicos e registros das TASKS
+            foreach ($project->tasks()->withTrashed()->get() as $task) {
+                foreach ($task->files as $taskFile) {
+                    if (Storage::disk('public')->exists($taskFile->path)) {
+                        Storage::disk('public')->delete($taskFile->path);
+                    }
+                    $taskFile->delete();
+                }
+                $task->forceDelete();
+            }
+
+            // 2. Deletar arquivos físicos e registros do PROJETO
+            foreach ($project->files as $projectFile) {
+                if (Storage::disk('public')->exists($projectFile->path)) {
+                    Storage::disk('public')->delete($projectFile->path);
+                }
+                $projectFile->forceDelete();
+            }
+
+            // 3. Remover membros do projeto
+            $project->members()->detach();
+
+            // 4. Deletar pasta inteira do projeto (se vazia)
+            $projectPath = 'projects/' . $project->id;
+            if (Storage::disk('public')->exists($projectPath)) {
+                Storage::disk('public')->deleteDirectory($projectPath);
+            }
+
+            // 5. Deletar pasta de tasks do projeto
+            foreach ($project->tasks()->withTrashed()->pluck('id') as $taskId) {
+                $taskPath = 'tasks/' . $taskId;
+                if (Storage::disk('public')->exists($taskPath)) {
+                    Storage::disk('public')->deleteDirectory($taskPath);
+                }
+            }
+
+            Log::info("Project {$project->id} force deleted com todos os recursos", [
+                'project_id' => $project->id,
+                'tasks_count' => $project->tasks()->withTrashed()->count(),
+                'files_count' => $project->files()->count(),
+            ]);
+        } catch (\Throwable $e) {
+            Log::error("Erro ao force delete do projeto {$project->id}: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
 
     // Os usuários que são membros do projeto
     public function members()

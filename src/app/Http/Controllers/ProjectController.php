@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AddProjectMemberRequest;
-use App\Http\Requests\StoreProjectRequest;
-use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Requests\{AddProjectMemberRequest, StoreProjectRequest, UpdateProjectRequest};
 
 use App\Models\Project;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\{DB, Log};
 
 class ProjectController extends Controller
 {
@@ -21,7 +16,7 @@ class ProjectController extends Controller
         $this->authorizeResource(Project::class, 'project');
     }
     /**
-     * Display a listing of the resource.
+     * Exibe uma lista paginada de projetos associados ao usuário autenticado, garantindo que os projetos sejam carregados com seus membros e tarefas relacionados para exibição eficiente, e lidando com erros de forma robusta para melhorar a experiência do usuário.
      */
     public function index()
     {
@@ -41,7 +36,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Mostra o formulário para criar um novo projeto
      */
     public function create()
     {
@@ -49,7 +44,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena um novo projeto no banco de dados, garantindo que ele esteja associado ao usuário autenticado e lidando com o upload de arquivos
      */
     public function store(StoreProjectRequest $request)
     {
@@ -61,7 +56,9 @@ class ProjectController extends Controller
                     ...$request->validated()
                 ]);
 
-                $this->handleFileUpload($request, $project);
+                if ($request->hasFile('file')) {
+                    $this->uploadFile($request->file('file'), $project);
+                }
             });
 
             return redirect()
@@ -129,7 +126,9 @@ class ProjectController extends Controller
             DB::transaction(function () use ($request, $project) {
                 $project->update($request->validated());
 
-                $this->handleFileUpload($request, $project);
+                if ($request->hasFile('file')) {
+                    $this->uploadFile($request->file('file'), $project);
+                }
             });
 
             return redirect()
@@ -151,31 +150,33 @@ class ProjectController extends Controller
     {
         try {
 
-            foreach ($project->files as $file) {
-                Storage::disk('public')->delete($file->path);
-            }
-
             $project->delete();
 
             return redirect()
                 ->route('projects.index')
                 ->with('success_project', 'Projeto removido com sucesso!');
         } catch (\Throwable $e) {
-            Log::error('Erro ao deletar projeto: ' . $e->getMessage());
+            Log::error('Erro ao deletar projeto: ' . $e->getMessage(), [
+                'project_id' => $project->id,
+                'user_id' => auth()->id(),
+            ]);
 
             return back()->with('error', 'Não foi possível remover o projeto.');
         }
     }
 
-    private function handleFileUpload($request, Project $project)
+    private function uploadFile($file, Project $project)
     {
-        if ($request->hasFile('file')) {
-            $path = $request->file('file')->store('projects', 'public');
+        try {
+            $path = $file->store('projects/' . $project->id, 'public');
 
             $project->files()->create([
                 'path' => $path,
-                'original_name' => $request->file('file')->getClientOriginalName()
+                'original_name' => $file->getClientOriginalName()
             ]);
+        } catch (\Throwable $e) {
+            Log::error('Erro ao fazer upload de arquivo: ' . $e->getMessage());
+            throw $e;
         }
     }
 

@@ -24,7 +24,36 @@ class StoreProjectFileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|file|max:2048|mimes:pdf,jpg,jpeg,png'
+            'file' => [
+                'nullable',
+                'file',
+                'max:10240', // 10MB
+                'mimes:pdf,jpg,jpeg,png',
+            ],
+        ];
+    }
+
+    /**
+     * Get custom attribute names for validator errors.
+     */
+    public function attributes(): array
+    {
+        return [
+            'file' => 'arquivo',
+        ];
+    }
+
+    /**
+     * Get custom error messages for validation failures.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'file.file' => 'O arquivo enviado não é válido.',
+            'file.max' => 'O arquivo não pode ter mais de 10MB.',
+            'file.mimes' => 'O arquivo deve ser: PDF, JPG, JPEG ou PNG.',
         ];
     }
 }

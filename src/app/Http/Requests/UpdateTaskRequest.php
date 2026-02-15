@@ -28,7 +28,7 @@ class UpdateTaskRequest extends FormRequest
             'due_date' => 'nullable|date',
             'priority' => 'required|in:low,medium,high',
             'status' => 'nullable|in:pending,in_progress,done',
-            'file' => 'nullable|mimes:pdf|max:2048', // 2MB
+            'file' => 'nullable|mimes:pdf|max:10240|file', // 10MB
         ];
     }
 
@@ -61,7 +61,8 @@ class UpdateTaskRequest extends FormRequest
             'priority.in' => 'A prioridade deve ser low, medium ou high.',
             'status.in' => 'O status deve ser pending, in_progress ou done.',
             'file.mimes' => 'O arquivo deve ser um PDF.',
-            'file.max' => 'O arquivo não pode exceder 2MB.',
+            'file.max' => 'O arquivo não pode exceder 10MB.',
+            'file.file' => 'O arquivo enviado não é válido.',
         ];
     }
 }

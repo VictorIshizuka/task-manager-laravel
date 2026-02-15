@@ -27,7 +27,8 @@ class StoreTaskRequest extends FormRequest
             'due_date' => 'nullable|date',
             'priority' => 'required|in:low,medium,high',
             'status' => 'nullable|in:pending,in_progress,done',
-            'file' => 'nullable|mimes:pdf|max:2048',
+            'file' => 'nullable|mimes:pdf|max:10240|file', // 10MB
+
         ];
     }
 
@@ -42,6 +43,7 @@ class StoreTaskRequest extends FormRequest
             'due_date' => 'data de vencimento',
             'priority' => 'prioridade',
             'status' => 'status',
+            'file' => 'arquivo',
         ];
     }
 
@@ -57,6 +59,9 @@ class StoreTaskRequest extends FormRequest
             'priority.required' => 'A prioridade é obrigatória.',
             'priority.in' => 'A prioridade deve ser: baixa, média ou alta.',
             'status.in' => 'O status deve ser: pendente, em andamento ou concluído.',
+            'file.mimes' => 'O arquivo deve ser um PDF.',
+            'file.max' => 'O arquivo não pode ter mais de 10MB.',
+            'file.file' => 'O arquivo enviado não é válido.',
         ];
     }
 }

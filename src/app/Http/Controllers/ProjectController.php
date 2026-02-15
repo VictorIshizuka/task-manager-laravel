@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Http\Requests\AddProjectMemberRequest;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
-
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 use App\Models\Project;
 
@@ -39,7 +36,7 @@ class ProjectController extends Controller
         } catch (\Throwable $e) {
             Log::error('Erro ao listar projetos: ' . $e->getMessage());
 
-            return back()->with('error', 'Não foi possível carregar os projetos.');
+            return back()->with('error_project', 'Não foi possível carregar os projetos.');
         }
     }
 
@@ -69,13 +66,13 @@ class ProjectController extends Controller
 
             return redirect()
                 ->route('projects.index')
-                ->with('success', 'Projeto criado com sucesso!');
+                ->with('success_project', 'Projeto criado com sucesso!');
         } catch (\Throwable $e) {
             Log::error('Erro ao criar projeto: ' . $e->getMessage());
 
             return back()
                 ->withInput()
-                ->with('error', 'Erro ao criar projeto. Tente novamente.');
+                ->with('error_project', 'Erro ao criar projeto. Tente novamente.');
         }
     }
 
@@ -86,11 +83,22 @@ class ProjectController extends Controller
     {
         try {
             $project->load([
-                'tasks:id,project_id,title,status,due_date,priority',
+                // 'tasks:id,project_id,title,status,due_date,priority',
                 'members:id,name,email',
                 'owner:id,name',
                 'files:id,project_id,path,original_name'
             ]);
+
+            $tasks = $project->tasks()
+                ->when(request('status'), fn($q) =>
+                $q->where('status', request('status')))
+                ->when(request('priority'), fn($q) =>
+                $q->where('priority', request('priority')))
+                ->orderByRaw("FIELD(status, 'pending','in_progress','done')")
+                ->orderBy('due_date')
+                ->get(['id', 'project_id', 'title', 'status', 'due_date', 'priority', 'user_id']);
+
+            $project->setRelation('tasks', $tasks);
 
             $users = \App\Models\User::select('id', 'name')->get();
 
@@ -100,7 +108,7 @@ class ProjectController extends Controller
 
             return redirect()
                 ->route('projects.index')
-                ->with('error', 'Projeto não encontrado ou indisponível.');
+                ->with('error_project', 'Projeto não encontrado ou indisponível.');
         }
     }
 
@@ -126,13 +134,13 @@ class ProjectController extends Controller
 
             return redirect()
                 ->route('projects.index')
-                ->with('success', 'Projeto atualizado com sucesso.');
+                ->with('success_project', 'Projeto atualizado com sucesso!');
         } catch (\Throwable $e) {
             Log::error('Erro ao atualizar projeto: ' . $e->getMessage());
 
             return back()
                 ->withInput()
-                ->with('error', 'Não foi possível atualizar o projeto.');
+                ->with('error_project', 'Não foi possível atualizar o projeto.');
         }
     }
 
@@ -151,7 +159,7 @@ class ProjectController extends Controller
 
             return redirect()
                 ->route('projects.index')
-                ->with('success', 'Projeto removido com sucesso.');
+                ->with('success_project', 'Projeto removido com sucesso!');
         } catch (\Throwable $e) {
             Log::error('Erro ao deletar projeto: ' . $e->getMessage());
 
@@ -171,25 +179,11 @@ class ProjectController extends Controller
         }
     }
 
-    public function  addMember(Request $request, Project $project)
+    public function  addMember(AddProjectMemberRequest $request, Project $project)
     {
-        $this->authorize('update', $project);
-
-        $request->validate([
-            'user_id' => [
-                'required',
-                'exists:users,id',
-
-                Rule::unique('project_user', 'user_id')
-                    ->where(fn($query) => $query->where('project_id', $project->id))
-            ],
-        ], [
-            'user_id.unique' => 'Este usuário já é membro do projeto.',
-            'user_id.required' => 'Selecione um usuário.',
-        ]);
         $project->members()->syncWithoutDetaching([$request->user_id]);
 
-        return back()->with('success', 'Usuário adicionado com sucesso.');
+        return back()->with('success_project_member', 'Usuário adicionado com sucesso!');
     }
 
     public function removeMember(Project $project, $userId)
@@ -198,6 +192,6 @@ class ProjectController extends Controller
 
         $project->members()->detach($userId);
 
-        return back()->with('success', 'Usuário removido com sucesso.');
+        return back()->with('success_project_member', 'Usuário removido com sucesso!');
     }
 }

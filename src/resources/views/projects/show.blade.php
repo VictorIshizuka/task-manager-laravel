@@ -1,48 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">
-                Detalhes do Projeto
-            </h2>
-
-            <div class="flex gap-2">
-                <x-ui.button as="a" href="{{ route('projects.index') }}" variant="secondary" size="md">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
-                    Voltar
-                </x-ui.button>
-
-                @can('update', $project)
-                    <x-ui.button as="a" href="{{ route('projects.edit', $project) }}" variant="warning"
-                        size="md">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                            </path>
-                        </svg>
-                        Editar Projeto
-                    </x-ui.button>
-                @endcan
-
-                @can('delete', $project)
-                    <form action="{{ route('projects.destroy', $project) }}" method="POST"
-                        onsubmit="return confirm('Tem certeza que deseja excluir este projeto?');" class="inline">
-                        @csrf
-                        @method('DELETE')
-                        <x-ui.button type="submit" variant="danger" size="md">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                </path>
-                            </svg>
-                            Excluir Projeto
-                        </x-ui.button>
-                    </form>
-                @endcan
-            </div>
-        </div>
+        <x-ui.page-header title="Detalhes do Projeto" :backUrl="route('projects.index')" :editUrl="route('projects.edit', $project)" :deleteUrl="route('projects.destroy', $project)"
+            deleteMessage="Tem certeza que deseja excluir este projeto?" :model="$project" />
 
         @if (session('error'))
             <div class="pt-4">
@@ -159,7 +118,7 @@
                                 @csrf
                                 <x-ui.input type="file" name="file" />
 
-                                <x-ui.button variant="primary" size="sm">
+                                <x-ui.button type="submit" variant="primary" size="sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -183,9 +142,8 @@
                                 <form method="POST" action="{{ route('projects.files.destroy', [$project, $file]) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <x-ui.button variant="outline-danger" title="Excluir" size="sm">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
+                                    <x-ui.button type="submit" variant="outline-danger" title="Excluir" size="sm">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                             </path>
@@ -237,7 +195,7 @@
                 <h3 class="text-lg font-semibold mb-4">Compartilhar Projeto</h3>
 
                 @if (auth()->id() === $project->owner_id)
-                    <form method="POST" action="{{ route('projects.members.add', $project) }}">
+                    <form method="POST" action="{{ route('projects.members.store', $project) }}">
                         @csrf
 
                         <div class="flex gap-3 items-end">
@@ -308,7 +266,7 @@
                             <!-- Lado direito -->
                             @if (auth()->id() === $project->owner_id || auth()->id() === $member->id)
                                 <form method="POST"
-                                    action="{{ route('projects.members.remove', [$project, $member]) }}">
+                                    action="{{ route('projects.members.destroy', [$project, $member]) }}">
                                     @csrf
                                     @method('DELETE')
 
@@ -541,8 +499,8 @@
                         </p>
                         @can('create', [App\Models\Task::class, $project])
                             <div class="mt-4">
-                                <x-ui.button as="a"
-                                    href="{{ route('projects.tasks.create', $project) }}" size="md">
+                                <x-ui.button as="a" href="{{ route('projects.tasks.create', $project) }}"
+                                    size="md">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 4v16m8-8H4"></path>

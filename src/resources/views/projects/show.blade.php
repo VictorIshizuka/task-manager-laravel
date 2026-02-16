@@ -81,7 +81,7 @@
                                 {{ $project->start_date->format('d/m/Y') }}
                             </p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                {{ $project->start_date->diffForHumans() }}
+                                {{ $project->created_at->diffForHumans() }}
                             </p>
                         </div>
                     @endif
@@ -363,8 +363,8 @@
                     </x-ui.button>
 
                     @if (request('status') || request('priority'))
-                        <x-ui.button href="{{ route('projects.show', $project) }}" variant="secondary"
-                            size="md">
+                        <x-ui.button as="a" href="{{ route('projects.show', $project) }}"
+                            variant="secondary" size="md">
                             Limpar
                         </x-ui.button>
                     @endif
@@ -464,6 +464,24 @@
 
                             {{-- Ações --}}
                             <div class="flex items-center gap-2 ml-4">
+                                @can('update', $task)
+                                    @if ($task->status !== 'done')
+                                        <form method="POST"
+                                            action="{{ route('projects.tasks.status-toggle', [$project, $task]) }}"
+                                            class="ml-2">
+                                            @csrf
+                                            @method('PATCH')
+                                            <x-ui.button type="submit" variant="outline-blue" size="sm"
+                                                title="Alternar status">
+                                                @if ($task->status === 'pending')
+                                                    Inicar tarefa
+                                                @elseif($task->status === 'in_progress')
+                                                    Parar tarefa
+                                                @endif
+                                            </x-ui.button>
+                                        </form>
+                                    @endif
+                                @endcan
                                 <x-ui.button as="a"
                                     href="{{ route('projects.tasks.show', [$project, $task]) }}"
                                     variant="outline-secondary" size="sm" title="Ver detalhes">

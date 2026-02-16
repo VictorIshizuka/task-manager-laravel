@@ -128,7 +128,7 @@ class Project extends Model
             return 'in_progress';
         }
 
-        return 'done';
+        return 'active';
     }
 
     // Progresso do projeto baseado nas tarefas

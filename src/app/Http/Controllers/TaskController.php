@@ -187,6 +187,23 @@ class TaskController extends Controller
         return back();
     }
 
+    public function toggleStatus(Project $project, Task $task)
+    {
+        $this->ensureTaskBelongsToProject($task, $project);
+
+        $this->authorize('update', $task);
+
+        if ($task->status === 'pending') {
+            $task->status = 'in_progress';
+        } elseif ($task->status === 'in_progress') {
+            $task->status = 'pending';
+        }
+
+        $task->save();
+
+        return redirect()->back();
+    }
+
     /**
      * Faz o upload de um arquivo associado a uma tarefa
      */

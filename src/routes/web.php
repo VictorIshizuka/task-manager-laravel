@@ -37,6 +37,9 @@ Route::middleware('auth')->group(function () {
 
     //  Task toggle status route
     Route::patch('/projects/{project}/tasks/{task}/toggle', [TaskController::class, 'toggle'])->name('projects.tasks.toggle');
+    Route::patch('/projects/{project}/tasks/{task}/status-toggle', [TaskController::class, 'toggleStatus'])
+    ->name('projects.tasks.status-toggle');
+
 
     // Task files routes
     Route::get('/projects/{project}/tasks/{task}/files/{file}/download', [TaskFileController::class, 'download'])->name('projects.tasks.files.download');

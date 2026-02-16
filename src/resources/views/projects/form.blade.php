@@ -27,9 +27,7 @@
         <x-input-label for="description" value="Descrição" />
         <textarea name="description" rows="4"
             class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300
-            rounded-md shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600">
-            {{ old('description', $project?->description) }}
-        </textarea>
+            rounded-md shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600">{{ old('description', $project?->description) }}</textarea>
 
         @error('description')
             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>

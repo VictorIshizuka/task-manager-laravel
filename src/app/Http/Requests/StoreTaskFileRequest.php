@@ -28,7 +28,7 @@ class StoreTaskFileRequest extends FormRequest
                 'required',
                 'file',
                 'max:10240', // 10MB
-                'mimes:pdf,jpg,jpeg,png',
+                'mimes:pdf',
             ],
         ];
     }
@@ -52,7 +52,7 @@ class StoreTaskFileRequest extends FormRequest
             'file.required' => 'Não existe arquivo para ser salvo.',
             'file.file' => 'O arquivo enviado não é válido.',
             'file.max' => 'O arquivo não pode ter mais de 10MB.',
-            'file.mimes' => 'O arquivo deve ser: PDF, JPG, JPEG ou PNG.',
+            'file.mimes' => 'O arquivo deve ser: PDF.',
         ];
     }
 }

@@ -75,7 +75,7 @@
                                 };
                             @endphp
                             <x-ui.badge class="uppercase"
-                                :color="$statusColor">{{ $statusTranslations['task'][$project->status] ?? ucfirst($project->status) }}</x-ui.badge>
+                                :color="$statusColor">{{ $project->tasks->count() > 0 ? $statusTranslations['project'][$project->status] ?? ucfirst($project->status) : $statusTranslations['project']['active'] }}</x-ui.badge>
                         </div>
                     </div>
 

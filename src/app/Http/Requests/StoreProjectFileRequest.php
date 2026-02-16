@@ -25,7 +25,7 @@ class StoreProjectFileRequest extends FormRequest
     {
         return [
             'file' => [
-                'nullable',
+                'required',
                 'file',
                 'max:10240', // 10MB
                 'mimes:pdf,jpg,jpeg,png',
@@ -51,6 +51,7 @@ class StoreProjectFileRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'file.required' => 'Não existe arquivo para ser salvo.',
             'file.file' => 'O arquivo enviado não é válido.',
             'file.max' => 'O arquivo não pode ter mais de 10MB.',
             'file.mimes' => 'O arquivo deve ser: PDF, JPG, JPEG ou PNG.',

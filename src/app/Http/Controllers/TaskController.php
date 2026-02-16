@@ -180,9 +180,18 @@ class TaskController extends Controller
 
         $this->authorize('update', $task);
 
-        $task->update([
-            'status' => $task->status === 'done' ? 'pending' : 'done'
-        ]);
+        $newStatus = $task->status === 'done' ? 'pending' : 'done';
+        $task->update(['status' => $newStatus]);
+
+        if ($newStatus === 'done') {
+            // Se todas as tasks estão done, o projeto fica completed
+            if ($project->tasks()->where('status', '!=', 'done')->count() === 0) {
+                $project->update(['status' => 'completed']);
+            }
+        } else {
+            $project->update(['status' => 'active']);
+        }
+
 
         return back();
     }

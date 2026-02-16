@@ -17,7 +17,8 @@ class Project extends Model
         'title',
         'description',
         'start_date',
-        'due_date'
+        'due_date',
+        'status'
 
     ];
 
@@ -122,14 +123,14 @@ class Project extends Model
     }
 
     // Status do projeto baseado nas tarefas
-    public function getStatusAttribute()
-    {
-        if ($this->tasks()->where('status', '!=', 'done')->exists()) {
-            return 'in_progress';
-        }
+    // public function getStatusAttribute()
+    // {
+    //     if ($this->tasks()->where('status', '!=', 'done')->exists()) {
+    //         return 'in_progress';
+    //     }
 
-        return 'active';
-    }
+    //     return 'active';
+    // }
 
     // Progresso do projeto baseado nas tarefas
     public function getProgressAttribute()

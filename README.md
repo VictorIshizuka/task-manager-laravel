@@ -37,7 +37,7 @@ Rede interna: `laravel-network`.
 ## 1️⃣ Clonar o repositório
 
 <pre class="overflow-visible! px-0!" data-start="1492" data-end="1577"><div class="contain-inline-size rounded-2xl corner-superellipse/1.1 relative bg-token-sidebar-surface-primary"><div class="sticky top-[calc(var(--sticky-padding-top)+9*var(--spacing))]"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-bash"><span><span>git </span><span>clone</span><span> https://github.com/VictorIshizuka/task-manager-laravel.git
-</span><span>cd</span><span> task-manager
+</span><span>cd</span><span> task-manager-laravel
 </span></span></code></div></div></pre>
 
 ## 2️⃣ Criar arquivo `.env`

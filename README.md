@@ -147,7 +147,7 @@ Principais entidades:
 
 > **Adicione sua imagem do DER abaixo**
 >
-> ![1771258988542](image/README/1771258988542.png)
+> ![1771270877247](image/Readme/1771270877247.png)
 
 ---
 

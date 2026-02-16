@@ -1,59 +1,200 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📌 Task Manager - Sistema de Gerenciamento de Tarefas
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+ **Sistema desenvolvido como desafio técnico para gerenciamento de projetos e tarefas** , permitindo colaboração entre membros da equipe, controle de progresso e acompanhamento das atividades diárias.
 
-## About Laravel
+O projeto segue com arquitetura  **MVC** , práticas basicas de segurança e organização.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+# 🚀 Tecnologias Utilizadas
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* **Back-end:** PHP 8.4 (FPM), Laravel (MVC)
+* **Banco de Dados:** MySQL 8.3
+* **Servidor Web:** Nginx
+* **Front-end:** TailwindCSS + Blade + Vite
+* **Node.js 20** (build front-end e assets)
+* **Containerização:** Docker + Docker Compose
+* **Gerenciamento de pacotes:** Composer & NPM
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+# 🐳 Estrutura Docker
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Serviço | Container          | Porta | Função             |
+| -------- | ------------------ | ----- | -------------------- |
+| app      | task-manager-app   | 9000  | PHP-FPM (Laravel)    |
+| nginx    | task-manager-nginx | 8000  | Servidor web         |
+| mysql    | task-manager-mysql | 3306  | Banco de dados MySQL |
 
-## Laravel Sponsors
+Volumes persistentes: `dbdata` para MySQL.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Rede interna: `laravel-network`.
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# ⚙️ Instalação e Configuração
 
-## Contributing
+## 1️⃣ Clonar o repositório
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+<pre class="overflow-visible! px-0!" data-start="1492" data-end="1577"><div class="contain-inline-size rounded-2xl corner-superellipse/1.1 relative bg-token-sidebar-surface-primary"><div class="sticky top-[calc(var(--sticky-padding-top)+9*var(--spacing))]"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-bash"><span><span>git </span><span>clone</span><span> https://github.com/VictorIshizuka/task-manager-laravel.git
+</span><span>cd</span><span> task-manager
+</span></span></code></div></div></pre>
 
-## Code of Conduct
+## 2️⃣ Criar arquivo `.env`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+<pre class="overflow-visible! px-0!" data-start="1608" data-end="1648"><div class="contain-inline-size rounded-2xl corner-superellipse/1.1 relative bg-token-sidebar-surface-primary"><div class="sticky top-[calc(var(--sticky-padding-top)+9*var(--spacing))]"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-bash"><span><span>cp</span><span> src/.env.example src/.env
+</span></span></code></div></div></pre>
 
-## Security Vulnerabilities
+Configurar banco de dados:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+<pre class="overflow-visible! px-0!" data-start="1678" data-end="1799"><div class="contain-inline-size rounded-2xl corner-superellipse/1.1 relative bg-token-sidebar-surface-primary"><div class="sticky top-[calc(var(--sticky-padding-top)+9*var(--spacing))]"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-env"><span>DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=task_manager
+DB_USERNAME=laravel
+DB_PASSWORD=secret
+</span></code></div></div></pre>
 
-## License
+## 3️⃣ Subir containers
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<pre class="overflow-visible! px-0!" data-start="1826" data-end="1866"><div class="contain-inline-size rounded-2xl corner-superellipse/1.1 relative bg-token-sidebar-surface-primary"><div class="sticky top-[calc(var(--sticky-padding-top)+9*var(--spacing))]"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-bash"><span><span>docker-compose up -d --build
+</span></span></code></div></div></pre>
+
+## 4️⃣ Instalar dependências e rodar migrations
+
+<pre class="overflow-visible! px-0!" data-start="1917" data-end="2059"><div class="contain-inline-size rounded-2xl corner-superellipse/1.1 relative bg-token-sidebar-surface-primary"><div class="sticky top-[calc(var(--sticky-padding-top)+9*var(--spacing))]"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-bash"><span><span>docker </span><span>exec</span><span> -it task-manager-app bash
+composer install
+npm install
+npm run build
+php artisan key:generate
+php artisan migrate
+</span><span>exit</span><span>
+</span></span></code></div></div></pre>
+
+## 5️⃣ Acessar aplicação
+
+<pre class="overflow-visible! px-0!" data-start="2087" data-end="2116"><div class="contain-inline-size rounded-2xl corner-superellipse/1.1 relative bg-token-sidebar-surface-primary"><div class="sticky top-[calc(var(--sticky-padding-top)+9*var(--spacing))]"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre!"><span><span>http:</span><span>//localhost:8000</span><span>
+</span></span></code></div></div></pre>
+
+---
+
+# 🏗 Arquitetura do Sistema
+
+O projeto segue **MVC** com camadas bem definidas:
+
+* **Models:** Responsáveis pelas entidades e regras de negócio (`User`, `Project`, `Task`, `ProjectFile`, `TaskFile`)
+* **Controllers:** Lógica de fluxo (`ProjectController`, `TaskController`, `AuthController`)
+* **Views:** Blade + TailwindCSS, responsividade (básica) e design simples
+* **FormRequests:** Validações de requisição
+* **Policies:** Controle de autorização
+* **Routes:** Web (`routes/web.php`)
+
+---
+
+# 📁 Funcionalidades Implementadas
+
+### Cadastro e Autenticação
+
+* Registro de usuários (nome, e-mail e senha)
+* Login e logout
+* Validação e proteção contra CSRF
+
+### Gerenciamento de Projetos
+
+* CRUD completo de projetos
+* Campos: título, descrição, datas, arquivos anexos
+* Compartilhamento com membros da equipe
+* Controle de permissões via Policies
+
+### Gerenciamento de Tarefas
+
+* CRUD de tarefas
+* Campos: título, descrição, prioridade, status, data de vencimento, arquivos
+* Filtro por status e prioridade
+* Marcação de tarefas concluídas
+* Dashboard com resumo de tarefas pendentes e atrasadas
+
+---
+
+# 🛡 Segurança Técnica
+
+* **Proteção contra SQL Injection** → Todos os queries via Eloquent ORM
+* **Proteção contra XSS** → Escape automático nas views Blade
+* **Proteção contra CSRF** → Middleware padrão do Laravel
+* **Autenticação segura** → Hash de senhas via hash
+* **Autorização granular** → Policies e Gates para controlar CRUD de projetos e tarefas
+* **Validação centralizada** → FormRequests para todas as entradas de dados
+* **Upload seguro de arquivos** → Restrições de tipo e tamanho
+* **Boas práticas** → Redirecionamentos corretos, tratamento de erros e mensagens de log claras
+
+---
+
+# 🗄 Banco de Dados
+
+Principais entidades:
+
+* **users**
+* **projects**
+* **tasks**
+* **project_user** (pivot)
+* **project_files**
+* **task_files**
+
+---
+
+# 📊 DER (Diagrama de Entidade e Relacionamento)
+
+> **Adicione sua imagem do DER abaixo**
+>
+> ![1771258988542](image/README/1771258988542.png)
+
+---
+
+# 📁 Estrutura de Pastas
+
+<pre class="overflow-visible! px-0!" data-start="4451" data-end="4762"><div class="contain-inline-size rounded-2xl corner-superellipse/1.1 relative bg-token-sidebar-surface-primary"><div class="sticky top-[calc(var(--sticky-padding-top)+9*var(--spacing))]"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre!"><span><span>.
+├── docker/
+│   ├── php/
+│   └── nginx/
+├── </span><span>src</span><span>/
+│   ├── app/
+│   │   ├── Models/
+│   │   ├── Policies/
+│   │   └── Http/
+│   │       ├── Controllers/
+│   │       └── Requests/
+│   ├── resources/
+│   │   ├── views/
+│   │   └── js/
+│   ├── routes/
+│   └── database/
+├── docker-compose</span><span>.yml</span><span>
+└── README</span><span>.md</span><span>
+</span></span></code></div></div></pre>
+
+---
+
+# 🔧 Boas práticas aplicadas
+
+* Arquitetura **MVC**
+* **FormRequests** para validação
+* **Policies** para controle de acesso
+* **Resources** para transformação de dados
+* **Service Providers** para configurações globais
+* **Rotas organizadas** por módulo
+* **Padrão PSR-12** de código
+* Comentários claros e consistentes
+
+---
+
+
+# 👨‍💻 Autor
+
+**Victor Ishizuka**
+
+
+---
+
+# 📜 Licença
+
+Projeto desenvolvido exclusivamente para avaliação técnica.

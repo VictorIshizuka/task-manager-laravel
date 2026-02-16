@@ -68,6 +68,7 @@ npm install
 npm run build
 php artisan key:generate
 php artisan migrate
+php artisan db:seed
 </span><span>exit</span><span>
 </span></span></code></div></div></pre>
 
@@ -187,11 +188,9 @@ Principais entidades:
 
 ---
 
-
 # 👨‍💻 Autor
 
 **Victor Ishizuka**
-
 
 ---
 

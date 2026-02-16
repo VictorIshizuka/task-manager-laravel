@@ -15,13 +15,14 @@
         'primary' => 'bg-indigo-600 dark:bg-indigo-700 hover:bg-indigo-700 dark:hover:bg-indigo-800 text-white',
         'danger' => 'bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-800 text-white',
         'warning' => 'bg-yellow-600 dark:bg-yellow-700 hover:bg-yellow-700 dark:hover:bg-yellow-800 text-white',
-        'info' => 'bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white',
+        'info' => 'bg-blue-600 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-600 text-white',
         'secondary' => 'bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 text-white',
+
         'outline-primary' => 'bg-transparent hover:bg-indigo-600 hover:text-white text-indigo-600',
-        'outline-danger' => 'bg-transparent border border-red-600 hover:bg-red-600 hover:text-white text-red-600',
-        'outline-warning' =>
-            'bg-transparent border border-yellow-600 hover:bg-yellow-600 hover:text-white text-yellow-600',
-        'outline-secondary' => 'bg-transparent border border-gray-600 hover:bg-gray-600 hover:text-white text-gray-600',
+        'outline-danger' => 'bg-transparent hover:bg-red-600 hover:text-white text-red-600',
+        'outline-warning' => 'bg-transparent  hover:bg-yellow-600 hover:text-white text-yellow-600',
+        'outline-secondary' => 'bg-transparent hover:bg-gray-600 hover:text-white text-gray-600',
+
     ];
 
     $sizes = [

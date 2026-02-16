@@ -14,7 +14,7 @@
         <x-alerts.project />
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-8">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
 
             <!-- Card Principal -->
@@ -107,7 +107,7 @@
 
                 <!-- Arquivos do Projeto -->
                 <div class=" mt-6">
-                    <div class="flex justify-between items-center mb-4">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
                             Arquivos ({{ $project->files->count() }})
                         </h3>
@@ -116,16 +116,19 @@
                             <form method="POST" action="{{ route('projects.files.store', $project) }}"
                                 enctype="multipart/form-data" class="flex gap-2">
                                 @csrf
-                                <x-ui.input type="file" name="file" />
-
-                                <x-ui.button type="submit" variant="primary" size="sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16" />
-                                    </svg>
-                                    Upload
-                                </x-ui.button>
+                                <div class="flex w-full gap-3 items-start">
+                                    <div class="flex-1">
+                                        <x-ui.input type="file" name="file" :error="$errors->first('file')" />
+                                    </div>
+                                    <x-ui.button type="submit" variant="primary" size="sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16" />
+                                        </svg>
+                                        Upload
+                                    </x-ui.button>
+                                </div>
                             </form>
                         @endcan
                     </div>
@@ -198,7 +201,7 @@
                     <form method="POST" action="{{ route('projects.members.store', $project) }}">
                         @csrf
 
-                        <div class="flex gap-3 items-end">
+                        <div class="flex gap-3 items-start">
                             <div class="flex-1">
                                 <label class="block text-sm mb-1 text-gray-600 dark:text-gray-400">
                                     Selecionar usuário
@@ -228,7 +231,7 @@
                                 @enderror
                             </div>
 
-                            <div class="flex items-end">
+                            <div class="flex items-end pt-6">
                                 <x-ui.button type="submit" variant="primary" size="md"
                                     title="Adicionar Membro">
                                     Adicionar Membro

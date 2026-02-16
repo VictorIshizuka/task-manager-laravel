@@ -24,7 +24,7 @@
         <x-alerts.project />
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             <!-- Card Principal -->
@@ -136,7 +136,7 @@
                     </div>
                 @empty
                     <!-- Estado Vazio -->
-                    <div class="text-center py-12">
+                    <div class="text-center py-8">
                         <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

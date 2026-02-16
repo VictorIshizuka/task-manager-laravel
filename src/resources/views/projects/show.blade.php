@@ -1,3 +1,25 @@
+@php
+    // Traduções para pt-BR
+    $statusTranslations = [
+        'task' => [
+            'pending' => 'Pendente',
+            'in_progress' => 'Em andamento',
+            'done' => 'Concluída',
+        ],
+        'project' => [
+            'active' => 'Ativo',
+            'in_progress' => 'Em andamento',
+            'completed' => 'Concluído',
+            'archived' => 'Arquivado',
+        ],
+        'priority' => [
+            'low' => 'Baixa',
+            'medium' => 'Média',
+            'high' => 'Alta',
+        ],
+    ];
+@endphp
+
 <x-app-layout>
     <x-slot name="header">
         <x-ui.page-header title="Detalhes do Projeto" :backUrl="route('projects.index')" :editUrl="route('projects.edit', $project)" :deleteUrl="route('projects.destroy', $project)"
@@ -426,14 +448,14 @@
                                             : ($task->priority == 'medium'
                                                 ? 'yellow'
                                                 : 'green')">
-                                            {{ ucfirst($task->priority) }}
+                                            {{ $statusTranslations['priority'][$task->priority] ?? ucfirst($task->priority) }}
                                         </x-ui.badge>
                                         <x-ui.badge class="uppercase" :color="$task->status == 'done'
                                             ? 'green'
                                             : ($task->status == 'in_progress'
                                                 ? 'blue'
                                                 : 'gray')">
-                                            {{ str_replace('_', ' ', ucfirst($task->status)) }}
+                                            {{ $statusTranslations['task'][$task->status] ?? ucfirst($task->status) }}
                                         </x-ui.badge>
 
                                     </div>

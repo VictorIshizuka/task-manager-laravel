@@ -1,3 +1,25 @@
+@php
+    // Traduções para pt-BR
+    $statusTranslations = [
+        'task' => [
+            'pending' => 'Pendente',
+            'in_progress' => 'Em andamento',
+            'done' => 'Concluída',
+        ],
+        'project' => [
+            'active' => 'Ativo',
+            'in_progress' => 'Em andamento',
+            'completed' => 'Concluído',
+            'archived' => 'Arquivado',
+        ],
+        'priority' => [
+            'low' => 'Baixa',
+            'medium' => 'Média',
+            'high' => 'Alta',
+        ],
+    ];
+@endphp
+
 <x-app-layout>
     <x-slot name="header">
 
@@ -42,7 +64,7 @@
                                 : ($task->status == 'in_progress'
                                     ? 'blue'
                                     : 'gray')">
-                                {{ str_replace('_', ' ', ucfirst($task->status)) }}
+                                {{ $statusTranslations['task'][$task->status] ?? ucfirst($task->status) }}
                             </x-ui.badge>
 
                         </div>
@@ -54,7 +76,7 @@
                                 : ($task->priority == 'medium'
                                     ? 'yellow'
                                     : 'green')">
-                                {{ ucfirst($task->priority) }}
+                                {{ $statusTranslations['priority'][$task->priority] ?? ucfirst($task->priority) }}
                             </x-ui.badge>
                         </div>
 
